@@ -15,6 +15,7 @@
       "member-variable-declaration",
       "object-destructuring",
       "array-destructuring"
-    ]
+    ],
+    "quotemark": [true, "single"]
   }
 }

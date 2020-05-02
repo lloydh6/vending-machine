@@ -1,4 +1,6 @@
-import { VendingMachine } from '../';
+import {
+  VendingMachine,
+} from '../';
 import {
   IVendingMachine,
   IVendingMachineConfiguration,
@@ -12,10 +14,15 @@ describe('VendingMachine tests', (): void => {
     // Arrange
     const coins: ICoin[] = [];
     const inventory: IVendingMachineItem[] = [];
-    const actions: IVendingMachineActions = {};
+    const actions: IVendingMachineActions = {
+      dispenseCoin: jest.fn(),
+      dispenseItem: jest.fn(),
+      displayMessage: jest.fn(),
+    };
     const configuration: IVendingMachineConfiguration = {
       coins,
       inventory,
+      actions,
     };
 
     // Act

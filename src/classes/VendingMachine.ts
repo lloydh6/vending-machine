@@ -1,6 +1,12 @@
-import { IVendingMachine } from '../interfaces';
+import { IVendingMachine, IVendingMachineConfiguration } from '../interfaces';
 
 class VendingMachine implements IVendingMachine {
+
+  private _configuration: IVendingMachineConfiguration;
+
+  constructor(configuration: IVendingMachineConfiguration) {
+    this._configuration = configuration;
+  }
 
 }
 

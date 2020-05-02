@@ -4,6 +4,7 @@ import {
   IVendingMachineConfiguration,
   ICoin,
   IVendingMachineItem,
+  IVendingMachineActions,
 } from '../../interfaces';
 
 describe('VendingMachine tests', (): void => {
@@ -11,6 +12,7 @@ describe('VendingMachine tests', (): void => {
     // Arrange
     const coins: ICoin[] = [];
     const inventory: IVendingMachineItem[] = [];
+    const actions: IVendingMachineActions = {};
     const configuration: IVendingMachineConfiguration = {
       coins,
       inventory,

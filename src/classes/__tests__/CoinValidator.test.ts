@@ -1,5 +1,6 @@
 import { USACoinValidator } from '../';
 import { IValidatedCoin, ICoin, ICoinValidator } from '../../interfaces';
+import { USACoinWeightEnum, USACoinRadiusEnum } from '../../enums';
 
 describe('CoinValidator tests', (): void => {
   it('should throw an exception when an invalid coin is passed to the validate function', (): void => {
@@ -28,8 +29,8 @@ describe('CoinValidator tests', (): void => {
   it('should return a valid coin when nickle is given', (): void => {
     // Arrange
     const invalidCoin: ICoin = {
-      weight: 1,
-      radius: 1,
+      weight: USACoinWeightEnum.dime,
+      radius: USACoinRadiusEnum.dime,
     };
     const usaCoinValidator: ICoinValidator = new USACoinValidator();
 

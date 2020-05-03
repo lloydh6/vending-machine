@@ -26,18 +26,19 @@ class VendingMachine implements IVendingMachine {
   }
 
   selectProduct(code: string): void {
-    const items: IVendingMachineItem[] = this._inventory.filter(
-      (item: IVendingMachineItem): boolean => item.code === code,
-    );
-    if (items.length === 0) {
+    const itemIndex: number =
+      this._inventory.findIndex((item: IVendingMachineItem): boolean => item.code == code);
+    const selectedItem: IVendingMachineItem = this._inventory[itemIndex];
+    if (itemIndex < 0) {
       this.displayMessage('SOLD OUT');
       return;
     }
-    const firstItem: IVendingMachineItem = items[0];
-    if (firstItem.price > this._customerWalletTotal) {
-      this.displayMessage(`PRICE: $${firstItem.price.toFixed(2)}`);
+    if (selectedItem.price > this._customerWalletTotal) {
+      this.displayMessage(`PRICE: $${selectedItem.price.toFixed(2)}`);
       return;
     }
+    this._configuration.actions.dispenseItem(selectedItem);
+    this._inventory = this._inventory.splice(itemIndex, 1);
   }
 
   private updateCustomerWallet(validatedCoin: IValidatedCoin): void {

@@ -236,7 +236,7 @@ describe('VendingMachine tests', (): void => {
       expect((vendingMachine as any)._inventory).toEqual([colaItem]);
     });
 
-    fit('should process the change if there is some', (): void => {
+    it('should process the change if there is some', (): void => {
       // Arrange
       const coins: ICoin[] = [
         { weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter },
@@ -276,7 +276,14 @@ describe('VendingMachine tests', (): void => {
       // Assert
       expect(configuration.actions.dispenseCoin).toHaveBeenCalledTimes(2);
       expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith({
-
+        monitoryValue: 0.25,
+        radius: 5,
+        weight: 5,
+      });
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith({
+        monitoryValue: 0.1,
+        radius: 3,
+        weight: 3,
       });
     });
   });

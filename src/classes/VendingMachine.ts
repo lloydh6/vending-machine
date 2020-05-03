@@ -1,4 +1,5 @@
 import { IVendingMachine, IVendingMachineConfiguration, ICoin, IValidatedCoin, IVendingMachineItem } from '../interfaces';
+import { USACoinValuesEnum } from '../enums';
 
 class VendingMachine implements IVendingMachine {
 
@@ -27,7 +28,7 @@ class VendingMachine implements IVendingMachine {
 
   selectProduct(code: string): void {
     const itemIndex: number =
-      this._inventory.findIndex((item: IVendingMachineItem): boolean => item.code == code);
+      this._inventory.findIndex((item: IVendingMachineItem): boolean => item.code === code);
     const selectedItem: IVendingMachineItem = this._inventory[itemIndex];
     if (itemIndex < 0) {
       this.displayMessage('SOLD OUT');
@@ -39,7 +40,49 @@ class VendingMachine implements IVendingMachine {
     }
     this._configuration.actions.dispenseItem(selectedItem);
     this._inventory = this._inventory.splice(itemIndex, 1);
+    this.dispenseChange(selectedItem.price);
     this.displayMessage('THANK YOU');
+  }
+
+  private dispenseChange(price: number): void {
+    let change: number = parseFloat((this._customerWalletTotal - price).toFixed(2));
+    while (change > 0) {
+      if (
+        change >= USACoinValuesEnum.quarter
+        && this._machineWallet.filter(
+          (coin: IValidatedCoin): boolean => coin.monitoryValue === USACoinValuesEnum.quarter,
+        ).length > 0
+      ) {
+        change = parseFloat((parseFloat(change.toFixed(2)) - USACoinValuesEnum.quarter).toFixed(2));
+        this.dispenseCoinFromWallet(USACoinValuesEnum.quarter);
+      } else if (
+        change >= USACoinValuesEnum.nickle
+        && this._machineWallet.filter(
+          (coin: IValidatedCoin): boolean => coin.monitoryValue === USACoinValuesEnum.nickle,
+        ).length > 0
+      ) {
+        change -= USACoinValuesEnum.nickle;
+        this.dispenseCoinFromWallet(USACoinValuesEnum.nickle);
+      } else if (
+        change >= USACoinValuesEnum.dime
+        && this._machineWallet.filter(
+          (coin: IValidatedCoin): boolean => coin.monitoryValue === USACoinValuesEnum.dime,
+        ).length > 0
+      ) {
+        change -= USACoinValuesEnum.dime;
+        this.dispenseCoinFromWallet(USACoinValuesEnum.dime);
+      }else {
+        throw new Error('No Sufficient Change');
+      }
+    }
+  }
+
+  private dispenseCoinFromWallet(monitoryValue: number): void {
+    const coinIndex: number = this._machineWallet.findIndex(
+      (validatedCoin: IValidatedCoin): boolean => validatedCoin.monitoryValue === monitoryValue,
+    );
+    const coin: IValidatedCoin = this._machineWallet.splice(coinIndex, 1)[0];
+    this._configuration.actions.dispenseCoin(coin);
   }
 
   private updateCustomerWallet(validatedCoin: IValidatedCoin): void {
@@ -61,6 +104,9 @@ class VendingMachine implements IVendingMachine {
         this._configuration.actions.dispenseCoin(coin);
       }
     });
+    this._machineWallet.sort(
+      (a: IValidatedCoin, b: IValidatedCoin): number => a.monitoryValue > b.monitoryValue ? -1 : 1,
+    );
   }
 
 }

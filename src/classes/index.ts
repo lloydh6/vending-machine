@@ -1,7 +1,7 @@
 import VendingMachine from './VendingMachine';
-import CoinValidator from './CoinValidator';
+import USACoinValidator from './USACoinValidator';
 
 export {
   VendingMachine,
-  CoinValidator,
+  USACoinValidator,
 };

@@ -4,6 +4,7 @@ import ICoin from './ICoin';
 import IVendingMachineItem from './IVendingMachineItem';
 import IVendingMachineActions from './IVendingMachineActions';
 import IValidatedCoin from './IValidatedCoin';
+import ICoinValidator from './ICoinValidator';
 
 export {
   IVendingMachine,
@@ -12,4 +13,5 @@ export {
   IVendingMachineItem,
   IVendingMachineActions,
   IValidatedCoin,
+  ICoinValidator,
 };

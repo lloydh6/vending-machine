@@ -1,6 +1,6 @@
 import { USACoinValidator } from '../';
 import { IValidatedCoin, ICoin, ICoinValidator } from '../../interfaces';
-import { USACoinWeightEnum, USACoinRadiusEnum } from '../../enums';
+import { USACoinWeightEnum, USACoinRadiusEnum, USACoinValuesEnum } from '../../enums';
 
 describe('CoinValidator tests', (): void => {
   it('should throw an exception when an invalid coin is passed to the validate function', (): void => {
@@ -39,6 +39,6 @@ describe('CoinValidator tests', (): void => {
 
     // Assert
     expect(result).toBeDefined();
-    expect(result.monitoryValue).toBe(5);
+    expect(result.monitoryValue).toBe(USACoinValuesEnum.dime);
   });
 });

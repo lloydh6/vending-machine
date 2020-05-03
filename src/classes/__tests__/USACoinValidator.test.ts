@@ -1,4 +1,4 @@
-import { USACoinValidator } from '../';
+import { USACoinValidator } from '..';
 import { IValidatedCoin, ICoin, ICoinValidator } from '../../interfaces';
 import { USACoinWeightEnum, USACoinRadiusEnum, USACoinValuesEnum } from '../../enums';
 
@@ -26,16 +26,32 @@ describe('CoinValidator tests', (): void => {
     expect(exception).toBeDefined();
   });
 
-  it('should return a valid coin when nickle is given', (): void => {
+  it('should return a valid coin when a nickle is given', (): void => {
     // Arrange
-    const invalidCoin: ICoin = {
+    const validCoin: ICoin = {
+      weight: USACoinWeightEnum.nickle,
+      radius: USACoinRadiusEnum.nickle,
+    };
+    const usaCoinValidator: ICoinValidator = new USACoinValidator();
+
+    // Act
+    const result: IValidatedCoin = usaCoinValidator.validate(validCoin);
+
+    // Assert
+    expect(result).toBeDefined();
+    expect(result.monitoryValue).toBe(USACoinValuesEnum.nickle);
+  });
+
+  it('should return a valid coin when a dime is given', (): void => {
+    // Arrange
+    const validCoin: ICoin = {
       weight: USACoinWeightEnum.dime,
       radius: USACoinRadiusEnum.dime,
     };
     const usaCoinValidator: ICoinValidator = new USACoinValidator();
 
     // Act
-    const result: IValidatedCoin = usaCoinValidator.validate(invalidCoin);
+    const result: IValidatedCoin = usaCoinValidator.validate(validCoin);
 
     // Assert
     expect(result).toBeDefined();

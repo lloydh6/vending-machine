@@ -202,7 +202,6 @@ describe('VendingMachine tests', (): void => {
 
     it('should dispense product if there are some in stock and the price is correct', (): void => {
       // Arrange
-      jest.restoreAllMocks();
       const coins: ICoin[] = [];
       const colaItem: IVendingMachineItem = new Cola();
       const inventory: IVendingMachineItem[] = [

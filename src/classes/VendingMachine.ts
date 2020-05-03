@@ -61,6 +61,7 @@ class VendingMachine implements IVendingMachine {
     const exactChangeItems: IVendingMachineItem[] = [];
     this._inventory.forEach((item: IVendingMachineItem): void => {
       try {
+        // TODO: Fix this check.. as it's not correct
         this.calculateChange(2 - item.price , [...this._machineWallet]);
       } catch (error) {
         exactChangeItems.push(item);

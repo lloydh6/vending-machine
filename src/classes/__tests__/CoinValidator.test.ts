@@ -1,12 +1,26 @@
 import { CoinValidator } from '../';
-import { IValidatedCoin } from '../../interfaces';
+import { IValidatedCoin, ICoin } from '../../interfaces';
 
 describe('CoinValidator tests', (): void => {
-  it('should initialize a coin validator class successfully', (): void => {
+  it('should throw an exception when an invalid coin is passed to the validate function', (): void => {
+    // Arrange
+    let result;
+    let exception: Error | undefined;
+    const invalidCoin: ICoin = {
+      weight: 100000,
+      radius: 100000,
+    };
+
     // Act
-    const coin: IValidatedCoin = CoinValidator.validateCoin();
+    try {
+      result = CoinValidator.validate(invalidCoin);
+    } catch (error) {
+
+      exception = error;
+    }
 
     // Assert
-    expect(coin).toBeDefined();
+    expect(result).not.toBeDefined();
+    expect(exception).toBeDefined();
   });
 });

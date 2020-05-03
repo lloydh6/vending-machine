@@ -10,6 +10,7 @@ class VendingMachine implements IVendingMachine {
     this._configuration = configuration;
     this._customerWallet = [];
     this._machineWallet = [];
+    this.loadMachineWallet(configuration.coins);
   }
 
   insertCoin(coin: ICoin): void {
@@ -19,6 +20,17 @@ class VendingMachine implements IVendingMachine {
     } catch (error) {
       this._configuration.actions.dispenseCoin(coin);
     }
+  }
+
+  private loadMachineWallet(coins: ICoin[]): void {
+    coins.forEach((coin: ICoin): void => {
+      try {
+        const validatedCoin: IValidatedCoin = this._configuration.coinValidator.validate(coin);
+        this._machineWallet.push(validatedCoin);
+      } catch (error) {
+        this._configuration.actions.dispenseCoin(coin);
+      }
+    });
   }
 
 }

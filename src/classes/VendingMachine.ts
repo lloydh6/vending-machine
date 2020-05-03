@@ -4,10 +4,12 @@ class VendingMachine implements IVendingMachine {
 
   private _configuration: IVendingMachineConfiguration;
   private _customerWallet: IValidatedCoin[];
+  private _machineWallet: IValidatedCoin[];
 
   constructor(configuration: IVendingMachineConfiguration) {
     this._configuration = configuration;
     this._customerWallet = [];
+    this._machineWallet = [];
   }
 
   insertCoin(coin: ICoin): void {

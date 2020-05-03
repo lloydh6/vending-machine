@@ -8,6 +8,7 @@ import {
   IVendingMachineItem,
   IVendingMachineActions,
 } from '../../interfaces';
+import USACoinValidator from '../USACoinValidator';
 
 describe('VendingMachine tests', (): void => {
   it('should initialize a valid vending machine', (): void => {
@@ -23,6 +24,7 @@ describe('VendingMachine tests', (): void => {
       coins,
       inventory,
       actions,
+      coinValidator: new USACoinValidator(),
     };
 
     // Act
@@ -45,6 +47,7 @@ describe('VendingMachine tests', (): void => {
           dispenseItem: jest.fn(),
           displayMessage: jest.fn(),
         },
+        coinValidator: new USACoinValidator(),
       };
       vendingMachine = new VendingMachine(config);
     });

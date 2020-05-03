@@ -319,7 +319,15 @@ describe('VendingMachine tests', (): void => {
 
       // Assert
       expect(configuration.actions.dispenseCoin).toHaveBeenCalledTimes(4);
-      expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith(4);
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith({
+        monitoryValue: 0.25, radius: 5, weight: 5,
+      });
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith({
+        monitoryValue: 0.1, radius: 3, weight: 3,
+      });
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith({
+        monitoryValue: 0.05, radius: 1, weight: 1,
+      });
     });
   });
 });

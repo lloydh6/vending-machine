@@ -124,4 +124,31 @@ describe('VendingMachine tests', (): void => {
       );
     });
   });
+
+  describe('selectProduct', (): void => {
+    it('should call the displayMessage function when the selected item is not in stock', (): void => {
+      // Arrange
+      const coins: ICoin[] = [];
+      const inventory: IVendingMachineItem[] = [];
+      const actions: IVendingMachineActions = {
+        dispenseCoin: jest.fn(),
+        dispenseItem: jest.fn(),
+        displayMessage: jest.fn(),
+      };
+      const configuration: IVendingMachineConfiguration = {
+        coins,
+        inventory,
+        actions,
+        coinValidator: new USACoinValidator(),
+      };
+      const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+
+      // Act
+      vendingMachine.selectProduct('A1');
+
+      // Assert
+      expect(actions.displayMessage).toHaveBeenCalledTimes(1);
+      expect(actions.displayMessage).toHaveBeenCalledWith('SOLD OUT');
+    });
+  });
 });

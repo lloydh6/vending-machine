@@ -219,6 +219,10 @@ describe('VendingMachine tests', (): void => {
         coinValidator: new USACoinValidator(),
       };
       const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
 
       // Act
       vendingMachine.selectProduct('A1');

@@ -39,6 +39,7 @@ class VendingMachine implements IVendingMachine {
     }
     this._configuration.actions.dispenseItem(selectedItem);
     this._inventory = this._inventory.splice(itemIndex, 1);
+    this.displayMessage('THANK YOU');
   }
 
   private updateCustomerWallet(validatedCoin: IValidatedCoin): void {

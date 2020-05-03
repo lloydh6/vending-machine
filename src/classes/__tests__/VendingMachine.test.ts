@@ -199,5 +199,34 @@ describe('VendingMachine tests', (): void => {
       expect(actions.displayMessage).toHaveBeenCalledTimes(1);
       expect(actions.displayMessage).toHaveBeenCalledWith('PRICE: $1.00');
     });
+
+    it('should dispense product if there are some in stock and the price is correct', (): void => {
+      // Arrange
+      const coins: ICoin[] = [];
+      const colaItem: IVendingMachineItem = new Cola();
+      const inventory: IVendingMachineItem[] = [
+        colaItem,
+      ];
+      const actions: IVendingMachineActions = {
+        dispenseCoin: jest.fn(),
+        dispenseItem: jest.fn(),
+        displayMessage: jest.fn(),
+      };
+      const configuration: IVendingMachineConfiguration = {
+        coins,
+        inventory,
+        actions,
+        coinValidator: new USACoinValidator(),
+      };
+      const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+
+      // Act
+      vendingMachine.selectProduct('A1');
+
+      // Assert
+      expect(actions.dispenseItem).toHaveBeenCalledTimes(1);
+      expect(actions.dispenseItem).toHaveBeenCalledWith(colaItem);
+      expect((vendingMachine as any)._inventory).toEqual([]);
+    });
   });
 });

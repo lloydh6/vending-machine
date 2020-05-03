@@ -12,7 +12,8 @@ class VendingMachine implements IVendingMachine {
 
   insertCoin(coin: ICoin): void {
     try {
-      const validatedCoin = this._configuration.coinValidator.validate(coin);
+      const validatedCoin: IValidatedCoin = this._configuration.coinValidator.validate(coin);
+      this._customerWallet.push(validatedCoin);
     } catch (error) {
       this._configuration.actions.dispenseCoin(coin);
     }

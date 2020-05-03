@@ -57,4 +57,20 @@ describe('CoinValidator tests', (): void => {
     expect(result).toBeDefined();
     expect(result.monitoryValue).toBe(USACoinValuesEnum.dime);
   });
+
+  it('should return a valid coin when a quarter is given', (): void => {
+    // Arrange
+    const validCoin: ICoin = {
+      weight: USACoinWeightEnum.quarter,
+      radius: USACoinRadiusEnum.quarter,
+    };
+    const usaCoinValidator: ICoinValidator = new USACoinValidator();
+
+    // Act
+    const result: IValidatedCoin = usaCoinValidator.validate(validCoin);
+
+    // Assert
+    expect(result).toBeDefined();
+    expect(result.monitoryValue).toBe(USACoinValuesEnum.quarter);
+  });
 });

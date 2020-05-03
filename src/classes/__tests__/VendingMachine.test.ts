@@ -9,6 +9,7 @@ import {
   IVendingMachineActions,
 } from '../../interfaces';
 import USACoinValidator from '../USACoinValidator';
+import { USACoinRadiusEnum, USACoinWeightEnum, USACoinValuesEnum } from '../../enums';
 
 describe('VendingMachine tests', (): void => {
   it('should initialize a valid vending machine', (): void => {
@@ -66,6 +67,29 @@ describe('VendingMachine tests', (): void => {
       expect(config.actions.dispenseCoin).toHaveBeenCalledTimes(1);
       expect(config.actions.dispenseCoin).toHaveBeenCalledWith(invalidCoin);
       expect((vendingMachine as any)._customerWallet).toEqual([]);
+    });
+
+    it('should accept a valid coin and add it to the customer wallet', (): void => {
+      // Arrange
+      const validDime: ICoin = {
+        radius: USACoinRadiusEnum.dime,
+        weight: USACoinWeightEnum.dime,
+      };
+
+      // Act
+      vendingMachine.insertCoin(validDime);
+
+      // Assert
+      expect(config.actions.dispenseCoin).not.toHaveBeenCalledTimes(1);
+      expect(config.actions.dispenseCoin).not.toHaveBeenCalledWith(validDime);
+      expect((vendingMachine as any)._customerWallet).toEqual(
+        [
+          {
+            ...validDime,
+            monitoryValue: USACoinValuesEnum.dime,
+          },
+        ],
+      );
     });
   });
 });

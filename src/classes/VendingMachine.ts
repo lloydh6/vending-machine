@@ -20,7 +20,7 @@ class VendingMachine implements IVendingMachine {
   insertCoin(coin: ICoin): void {
     try {
       const validatedCoin: IValidatedCoin = this._configuration.coinValidator.validate(coin);
-      this.updateCustomerWallet(validatedCoin);
+      this.addCoinToCustomerWallet(validatedCoin);
     } catch (error) {
       this._configuration.actions.dispenseCoin(coin);
     }
@@ -47,6 +47,13 @@ class VendingMachine implements IVendingMachine {
     } catch (error) {
       throw error;
     }
+  }
+
+  returnCoins(): void {
+    this._customerWallet.forEach((coin: IValidatedCoin): void => {
+      this.subtractCoinFromCustomerWallet(coin);
+    });
+    this._customerWallet = [];
   }
 
   private dispenseChangeFromWallet(price: number, wallet: IValidatedCoin[]): void {
@@ -92,10 +99,14 @@ class VendingMachine implements IVendingMachine {
     }
   }
 
-  private updateCustomerWallet(validatedCoin: IValidatedCoin): void {
+  private addCoinToCustomerWallet(validatedCoin: IValidatedCoin): void {
     this._customerWallet.push(validatedCoin);
     this._customerWalletTotal += validatedCoin.monitoryValue;
     this.displayMessage(`$${this._customerWalletTotal.toFixed(2)}`);
+  }
+
+  private subtractCoinFromCustomerWallet(validatedCoin: IValidatedCoin): void {
+    this._configuration.actions.dispenseCoin(validatedCoin);
   }
 
   private displayMessage(message: string): void {

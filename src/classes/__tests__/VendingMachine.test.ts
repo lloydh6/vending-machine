@@ -31,4 +31,37 @@ describe('VendingMachine tests', (): void => {
     // Assert
     expect(vendingMachine).toBeDefined();
   });
+
+  describe('insertCoin', (): void => {
+    let vendingMachine: IVendingMachine;
+    let config: IVendingMachineConfiguration;
+
+    beforeEach((): void => {
+      config = {
+        coins: [],
+        inventory: [],
+        actions: {
+          dispenseCoin: jest.fn(),
+          dispenseItem: jest.fn(),
+          displayMessage: jest.fn(),
+        },
+      };
+      vendingMachine = new VendingMachine(config);
+    });
+
+    it('should reject an invalid coin', (): void => {
+      // Arrange
+      const invalidCoin: ICoin = {
+        radius: 10000,
+        weight: 10000,
+      };
+
+      // Act
+      const result = vendingMachine.insertCoin(invalidCoin);
+
+      // Assert
+      expect(config.actions.dispenseCoin).toHaveBeenCalledTimes(1);
+      expect(config.actions.dispenseCoin).toHaveBeenCalledWith(invalidCoin);
+    });
+  });
 });

@@ -235,5 +235,49 @@ describe('VendingMachine tests', (): void => {
       expect(actions.displayMessage).toHaveBeenCalledWith('THANK YOU');
       expect((vendingMachine as any)._inventory).toEqual([colaItem]);
     });
+
+    fit('should process the change if there is some', (): void => {
+      // Arrange
+      const coins: ICoin[] = [
+        { weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter },
+        { weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter },
+        { weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime },
+        { weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter },
+        { weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter },
+        { weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime },
+      ];
+      const colaItem: IVendingMachineItem = new Cola();
+      const inventory: IVendingMachineItem[] = [
+        colaItem,
+        colaItem,
+      ];
+      const actions: IVendingMachineActions = {
+        dispenseCoin: jest.fn(),
+        dispenseItem: jest.fn(),
+        displayMessage: jest.fn(),
+      };
+      const configuration: IVendingMachineConfiguration = {
+        coins,
+        inventory,
+        actions,
+        coinValidator: new USACoinValidator(),
+      };
+      const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+
+      // Act
+      vendingMachine.selectProduct('A1');
+
+      // Assert
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledTimes(2);
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith({
+
+      });
+    });
   });
 });

@@ -110,7 +110,7 @@ describe('VendingMachine tests', (): void => {
     expect(configuration.actions.displayMessage).toHaveBeenCalledWith('INSERT COINS');
   });
 
-  it('should display INSERT COINS if there are coins for change', (): void => {
+  it('should display EXACT CHANGE ONLY when there is no available change', (): void => {
     // Arrange
     const dime: ICoin = { weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime };
 

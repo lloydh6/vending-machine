@@ -287,4 +287,39 @@ describe('VendingMachine tests', (): void => {
       });
     });
   });
+
+  describe('returnCoins', (): void => {
+    it('should return the users coins when called', (): void => {
+      // Arrange
+      const coins: ICoin[] = [];
+      const colaItem: IVendingMachineItem = new Cola();
+      const inventory: IVendingMachineItem[] = [
+        colaItem,
+        colaItem,
+      ];
+      const actions: IVendingMachineActions = {
+        dispenseCoin: jest.fn(),
+        dispenseItem: jest.fn(),
+        displayMessage: jest.fn(),
+      };
+      const configuration: IVendingMachineConfiguration = {
+        coins,
+        inventory,
+        actions,
+        coinValidator: new USACoinValidator(),
+      };
+      const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.nickle, radius: USACoinRadiusEnum.nickle });
+      vendingMachine.insertCoin({ weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter });
+
+      // Act
+      vendingMachine.returnCoins();
+
+      // Assert
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledTimes(4);
+      expect(configuration.actions.dispenseCoin).toHaveBeenCalledWith(4);
+    });
+  });
 });

@@ -38,51 +38,58 @@ class VendingMachine implements IVendingMachine {
       this.displayMessage(`PRICE: $${selectedItem.price.toFixed(2)}`);
       return;
     }
-    this._configuration.actions.dispenseItem(selectedItem);
-    this._inventory = this._inventory.splice(itemIndex, 1);
-    this.dispenseChange(selectedItem.price);
-    this.displayMessage('THANK YOU');
+    try {
+      this.dispenseChangeFromWallet(selectedItem.price, [...this._machineWallet]);
+      this._configuration.actions.dispenseItem(selectedItem);
+      this._inventory = this._inventory.splice(itemIndex, 1);
+      this.dispenseChangeFromWallet(selectedItem.price, this._machineWallet);
+      this.displayMessage('THANK YOU');
+    } catch (error) {
+      throw error;
+    }
   }
 
-  private dispenseChange(price: number): void {
+  private dispenseChangeFromWallet(price: number, wallet: IValidatedCoin[]): void {
     let change: number = parseFloat((this._customerWalletTotal - price).toFixed(2));
     while (change > 0) {
       if (
         change >= USACoinValuesEnum.quarter
-        && this._machineWallet.filter(
+        && wallet.filter(
           (coin: IValidatedCoin): boolean => coin.monitoryValue === USACoinValuesEnum.quarter,
         ).length > 0
       ) {
         change = parseFloat((parseFloat(change.toFixed(2)) - USACoinValuesEnum.quarter).toFixed(2));
-        this.dispenseCoinFromWallet(USACoinValuesEnum.quarter);
+        this.dispenseCoinFromMachineWallet(USACoinValuesEnum.quarter, wallet);
       } else if (
         change >= USACoinValuesEnum.nickle
-        && this._machineWallet.filter(
+        && wallet.filter(
           (coin: IValidatedCoin): boolean => coin.monitoryValue === USACoinValuesEnum.nickle,
         ).length > 0
       ) {
         change -= USACoinValuesEnum.nickle;
-        this.dispenseCoinFromWallet(USACoinValuesEnum.nickle);
+        this.dispenseCoinFromMachineWallet(USACoinValuesEnum.nickle, wallet);
       } else if (
         change >= USACoinValuesEnum.dime
-        && this._machineWallet.filter(
+        && wallet.filter(
           (coin: IValidatedCoin): boolean => coin.monitoryValue === USACoinValuesEnum.dime,
         ).length > 0
       ) {
         change -= USACoinValuesEnum.dime;
-        this.dispenseCoinFromWallet(USACoinValuesEnum.dime);
+        this.dispenseCoinFromMachineWallet(USACoinValuesEnum.dime, wallet);
       }else {
         throw new Error('No Sufficient Change');
       }
     }
   }
 
-  private dispenseCoinFromWallet(monitoryValue: number): void {
-    const coinIndex: number = this._machineWallet.findIndex(
+  private dispenseCoinFromMachineWallet(monitoryValue: number, wallet: IValidatedCoin[]): void {
+    const coinIndex: number = wallet.findIndex(
       (validatedCoin: IValidatedCoin): boolean => validatedCoin.monitoryValue === monitoryValue,
     );
-    const coin: IValidatedCoin = this._machineWallet.splice(coinIndex, 1)[0];
-    this._configuration.actions.dispenseCoin(coin);
+    const coin: IValidatedCoin = wallet.splice(coinIndex, 1)[0];
+    if (wallet === this._machineWallet) {
+      this._configuration.actions.dispenseCoin(coin);
+    }
   }
 
   private updateCustomerWallet(validatedCoin: IValidatedCoin): void {

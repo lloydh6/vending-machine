@@ -12,7 +12,7 @@ class VendingMachine implements IVendingMachine {
     this._configuration = configuration;
     this._customerWallet = [];
     this._machineWallet = [];
-    this._inventory = [];
+    this._inventory = configuration.inventory;
     this.loadMachineWallet(configuration.coins);
   }
 
@@ -31,6 +31,11 @@ class VendingMachine implements IVendingMachine {
     );
     if (items.length === 0) {
       this.displayMessage('SOLD OUT');
+      return;
+    }
+    const firstItem: IVendingMachineItem = items[0];
+    if (firstItem.price > this._customerWalletTotal) {
+      this.displayMessage(`PRICE: $${firstItem.price.toFixed(2)}`);
       return;
     }
   }

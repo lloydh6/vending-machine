@@ -206,6 +206,7 @@ describe('VendingMachine tests', (): void => {
       const colaItem: IVendingMachineItem = new Cola();
       const inventory: IVendingMachineItem[] = [
         colaItem,
+        colaItem,
       ];
       const actions: IVendingMachineActions = {
         dispenseCoin: jest.fn(),
@@ -230,7 +231,7 @@ describe('VendingMachine tests', (): void => {
       // Assert
       expect(actions.dispenseItem).toHaveBeenCalledTimes(1);
       expect(actions.dispenseItem).toHaveBeenCalledWith(colaItem);
-      expect((vendingMachine as any)._inventory).toEqual([]);
+      expect((vendingMachine as any)._inventory).toEqual([colaItem]);
     });
   });
 });

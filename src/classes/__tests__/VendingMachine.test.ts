@@ -68,6 +68,32 @@ describe('VendingMachine tests', (): void => {
     ]);
   });
 
+  it('should display INSERT COINS if there are coins for change', (): void => {
+    // Arrange
+    const dime: ICoin = { weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime };
+    const coins: ICoin[] = [
+      dime,
+    ];
+    const inventory: IVendingMachineItem[] = [];
+    const actions: IVendingMachineActions = {
+      dispenseCoin: jest.fn(),
+      dispenseItem: jest.fn(),
+      displayMessage: jest.fn(),
+    };
+    const configuration: IVendingMachineConfiguration = {
+      coins,
+      inventory,
+      actions,
+      coinValidator: new USACoinValidator(),
+    };
+
+    // Act
+    const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+
+    // Assert
+    expect(configuration.actions.displayMessage).toHaveBeenCalledWith('INSERT COINS');
+  });
+
   describe('insertCoin', (): void => {
     let vendingMachine: IVendingMachine;
     let config: IVendingMachineConfiguration;

@@ -10,6 +10,7 @@ import {
 } from '../../interfaces';
 import USACoinValidator from '../USACoinValidator';
 import { USACoinRadiusEnum, USACoinWeightEnum, USACoinValuesEnum } from '../../enums';
+import { Cola } from '../items';
 
 describe('VendingMachine tests', (): void => {
   it('should initialize a valid vending machine', (): void => {

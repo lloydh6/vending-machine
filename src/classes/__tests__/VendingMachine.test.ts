@@ -123,6 +123,27 @@ describe('VendingMachine tests', (): void => {
         ],
       );
     });
+
+    it('should keep a running total of the customers wallet and output this on screen when a new coin is added', (): void => {
+        // Arrange
+        const validDime: ICoin = {
+          radius: USACoinRadiusEnum.dime,
+          weight: USACoinWeightEnum.dime,
+        };
+        const validQuarter: ICoin = {
+          radius: USACoinRadiusEnum.quarter,
+          weight: USACoinWeightEnum.quarter,
+        };
+
+        // Act
+        vendingMachine.insertCoin(validDime);
+        vendingMachine.insertCoin(validQuarter);
+
+        // Assert
+        expect(config.actions.displayMessage).toHaveBeenCalledTimes(2);
+        expect(config.actions.displayMessage).toHaveBeenCalledWith('$0.10');
+        expect(config.actions.displayMessage).toHaveBeenCalledWith('$0.35');
+    });
   });
 
   describe('selectProduct', (): void => {

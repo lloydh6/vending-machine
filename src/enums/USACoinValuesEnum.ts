@@ -1,7 +1,7 @@
 enum USACoinValuesEnum {
-  nickle = 5,
-  dime = 10,
-  quarter = 25,
+  nickle = 0.5,
+  dime = 0.10,
+  quarter = 0.25,
 }
 
 export default USACoinValuesEnum;

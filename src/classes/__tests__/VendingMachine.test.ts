@@ -37,6 +37,36 @@ describe('VendingMachine tests', (): void => {
     expect((vendingMachine as any)._machineWallet).toEqual([]);
   });
 
+  it('should initialize a valid vending machine with the correct coins', (): void => {
+    // Arrange
+    const dime: ICoin = { weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime };
+    const coins: ICoin[] = [
+      dime,
+    ];
+    const inventory: IVendingMachineItem[] = [];
+    const actions: IVendingMachineActions = {
+      dispenseCoin: jest.fn(),
+      dispenseItem: jest.fn(),
+      displayMessage: jest.fn(),
+    };
+    const configuration: IVendingMachineConfiguration = {
+      coins,
+      inventory,
+      actions,
+      coinValidator: new USACoinValidator(),
+    };
+
+    // Act
+    const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+
+    // Assert
+    expect(vendingMachine).toBeDefined();
+    expect((vendingMachine as any)._customerWallet).toEqual([]);
+    expect((vendingMachine as any)._machineWallet).toEqual([
+      { ...dime, monitoryValue: USACoinValuesEnum.dime },
+    ]);
+  });
+
   describe('insertCoin', (): void => {
     let vendingMachine: IVendingMachine;
     let config: IVendingMachineConfiguration;

@@ -15,6 +15,7 @@ class VendingMachine implements IVendingMachine {
     this._machineWallet = [];
     this._inventory = configuration.inventory;
     this.loadMachineWallet(configuration.coins);
+    this.checkMachineChange();
   }
 
   insertCoin(coin: ICoin): void {
@@ -56,8 +57,23 @@ class VendingMachine implements IVendingMachine {
     this._customerWallet = [];
   }
 
-  private dispenseChangeFromWallet(price: number, wallet: IValidatedCoin[]): void {
-    let change: number = parseFloat((this._customerWalletTotal - price).toFixed(2));
+  private checkMachineChange(): void {
+    const exactChangeItems: IVendingMachineItem[] = [];
+    this._inventory.forEach((item: IVendingMachineItem): void => {
+      try {
+        this.calculateChange(2 - item.price , [...this._machineWallet]);
+      } catch (error) {
+        exactChangeItems.push(item);
+      }
+    });
+    if (exactChangeItems.length === this._inventory.length) {
+      this._configuration.actions.displayMessage('EXACT CHANGE ONLY');
+      return;
+    }
+    this._configuration.actions.displayMessage('INSERT COINS');
+  }
+
+  private calculateChange(change: number, wallet: IValidatedCoin[]): void {
     while (change > 0) {
       if (
         change >= USACoinValuesEnum.quarter
@@ -83,10 +99,15 @@ class VendingMachine implements IVendingMachine {
       ) {
         change -= USACoinValuesEnum.dime;
         this.dispenseCoinFromMachineWallet(USACoinValuesEnum.dime, wallet);
-      }else {
+      } else {
         throw new Error('No Sufficient Change');
       }
     }
+  }
+
+  private dispenseChangeFromWallet(price: number, wallet: IValidatedCoin[]): void {
+    const change: number = parseFloat((this._customerWalletTotal - price).toFixed(2));
+    this.calculateChange(change, wallet);
   }
 
   private dispenseCoinFromMachineWallet(monitoryValue: number, wallet: IValidatedCoin[]): void {

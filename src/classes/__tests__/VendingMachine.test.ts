@@ -33,6 +33,8 @@ describe('VendingMachine tests', (): void => {
 
     // Assert
     expect(vendingMachine).toBeDefined();
+    expect((vendingMachine as any)._customerWallet).toEqual([]);
+    expect((vendingMachine as any)._machineWallet).toEqual([]);
   });
 
   describe('insertCoin', (): void => {

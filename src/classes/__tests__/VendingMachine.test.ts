@@ -60,11 +60,12 @@ describe('VendingMachine tests', (): void => {
       };
 
       // Act
-      const result = vendingMachine.insertCoin(invalidCoin);
+      vendingMachine.insertCoin(invalidCoin);
 
       // Assert
       expect(config.actions.dispenseCoin).toHaveBeenCalledTimes(1);
       expect(config.actions.dispenseCoin).toHaveBeenCalledWith(invalidCoin);
+      expect((vendingMachine as any)._customerWallet).toEqual([]);
     });
   });
 });

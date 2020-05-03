@@ -8,6 +8,11 @@ class USACoinValidator implements ICoinValidator {
         ...coin,
         monitoryValue: USACoinValuesEnum.dime,
       };
+    } else if (coin.weight === USACoinWeightEnum.nickle && coin.radius === USACoinRadiusEnum.nickle) {
+      return {
+        ...coin,
+        monitoryValue: USACoinValuesEnum.nickle,
+      };
     }
     throw new Error('Invalid Coin');
   }

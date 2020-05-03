@@ -171,5 +171,32 @@ describe('VendingMachine tests', (): void => {
       expect(actions.displayMessage).toHaveBeenCalledTimes(1);
       expect(actions.displayMessage).toHaveBeenCalledWith('SOLD OUT');
     });
+
+    it('should call the displayMessage function when the item is more expensive than the sum of the coins added', (): void => {
+      // Arrange
+      const coins: ICoin[] = [];
+      const inventory: IVendingMachineItem[] = [
+        new Cola(),
+      ];
+      const actions: IVendingMachineActions = {
+        dispenseCoin: jest.fn(),
+        dispenseItem: jest.fn(),
+        displayMessage: jest.fn(),
+      };
+      const configuration: IVendingMachineConfiguration = {
+        coins,
+        inventory,
+        actions,
+        coinValidator: new USACoinValidator(),
+      };
+      const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+
+      // Act
+      vendingMachine.selectProduct('A1');
+
+      // Assert
+      expect(actions.displayMessage).toHaveBeenCalledTimes(1);
+      expect(actions.displayMessage).toHaveBeenCalledWith('PRICE: $1.00');
+    });
   });
 });

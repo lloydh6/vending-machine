@@ -1,11 +1,13 @@
-import { IVendingMachine, IVendingMachineConfiguration, ICoin } from '../interfaces';
+import { IVendingMachine, IVendingMachineConfiguration, ICoin, IValidatedCoin } from '../interfaces';
 
 class VendingMachine implements IVendingMachine {
 
   private _configuration: IVendingMachineConfiguration;
+  private _customerWallet: IValidatedCoin[];
 
   constructor(configuration: IVendingMachineConfiguration) {
     this._configuration = configuration;
+    this._customerWallet = [];
   }
 
   insertCoin(coin: ICoin): void {

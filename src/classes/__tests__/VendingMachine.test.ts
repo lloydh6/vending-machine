@@ -10,7 +10,7 @@ import {
 } from '../../interfaces';
 import USACoinValidator from '../USACoinValidator';
 import { USACoinRadiusEnum, USACoinWeightEnum, USACoinValuesEnum } from '../../enums';
-import { Cola } from '../items';
+import { Cola, Candy, Chips } from '../items';
 
 describe('VendingMachine tests', (): void => {
   it('should initialize a valid vending machine', (): void => {
@@ -71,10 +71,26 @@ describe('VendingMachine tests', (): void => {
   it('should display INSERT COINS if there are coins for change', (): void => {
     // Arrange
     const dime: ICoin = { weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime };
+    const quarter: ICoin = { weight: USACoinWeightEnum.quarter, radius: USACoinRadiusEnum.quarter };
+    const nickle: ICoin = { weight: USACoinWeightEnum.nickle, radius: USACoinRadiusEnum.nickle };
     const coins: ICoin[] = [
       dime,
+      quarter,
+      quarter,
+      quarter,
+      quarter,
+      quarter,
+      nickle,
+      nickle,
+      nickle,
+      nickle,
+      nickle,
     ];
-    const inventory: IVendingMachineItem[] = [];
+    const inventory: IVendingMachineItem[] = [
+      new Cola(),
+      new Candy(),
+      new Chips(),
+    ];
     const actions: IVendingMachineActions = {
       dispenseCoin: jest.fn(),
       dispenseItem: jest.fn(),
@@ -92,6 +108,35 @@ describe('VendingMachine tests', (): void => {
 
     // Assert
     expect(configuration.actions.displayMessage).toHaveBeenCalledWith('INSERT COINS');
+  });
+
+  it('should display INSERT COINS if there are coins for change', (): void => {
+    // Arrange
+    const dime: ICoin = { weight: USACoinWeightEnum.dime, radius: USACoinRadiusEnum.dime };
+
+    const coins: ICoin[] = [];
+    const inventory: IVendingMachineItem[] = [
+      new Cola(),
+      new Candy(),
+      new Chips(),
+    ];
+    const actions: IVendingMachineActions = {
+      dispenseCoin: jest.fn(),
+      dispenseItem: jest.fn(),
+      displayMessage: jest.fn(),
+    };
+    const configuration: IVendingMachineConfiguration = {
+      coins,
+      inventory,
+      actions,
+      coinValidator: new USACoinValidator(),
+    };
+
+    // Act
+    const vendingMachine: IVendingMachine = new VendingMachine(configuration);
+
+    // Assert
+    expect(configuration.actions.displayMessage).toHaveBeenCalledWith('EXACT CHANGE ONLY');
   });
 
   describe('insertCoin', (): void => {
@@ -167,7 +212,7 @@ describe('VendingMachine tests', (): void => {
         vendingMachine.insertCoin(validQuarter);
 
         // Assert
-        expect(config.actions.displayMessage).toHaveBeenCalledTimes(2);
+        expect(config.actions.displayMessage).toHaveBeenCalledTimes(3);
         expect(config.actions.displayMessage).toHaveBeenCalledWith('$0.10');
         expect(config.actions.displayMessage).toHaveBeenCalledWith('$0.35');
     });
@@ -195,7 +240,7 @@ describe('VendingMachine tests', (): void => {
       vendingMachine.selectProduct('A1');
 
       // Assert
-      expect(actions.displayMessage).toHaveBeenCalledTimes(1);
+      expect(actions.displayMessage).toHaveBeenCalledTimes(2);
       expect(actions.displayMessage).toHaveBeenCalledWith('SOLD OUT');
     });
 
@@ -222,7 +267,7 @@ describe('VendingMachine tests', (): void => {
       vendingMachine.selectProduct('A1');
 
       // Assert
-      expect(actions.displayMessage).toHaveBeenCalledTimes(1);
+      expect(actions.displayMessage).toHaveBeenCalledTimes(2);
       expect(actions.displayMessage).toHaveBeenCalledWith('PRICE: $1.00');
     });
 
@@ -257,7 +302,7 @@ describe('VendingMachine tests', (): void => {
       // Assert
       expect(actions.dispenseItem).toHaveBeenCalledTimes(1);
       expect(actions.dispenseItem).toHaveBeenCalledWith(colaItem);
-      expect(actions.displayMessage).toHaveBeenCalledTimes(5);
+      expect(actions.displayMessage).toHaveBeenCalledTimes(6);
       expect(actions.displayMessage).toHaveBeenCalledWith('THANK YOU');
       expect((vendingMachine as any)._inventory).toEqual([colaItem]);
     });
